@@ -11,6 +11,10 @@ class SecondFragment : Fragment(R.layout.f_second) {
         sharedElementEnterTransition = TransitionInflater
             .from(requireContext())
             .inflateTransition(R.transition.image_transition)
+
+        postponeEnterTransition()
+
+        startPostponedEnterTransition()
     }
 
 

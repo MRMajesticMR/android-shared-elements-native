@@ -11,7 +11,7 @@ interface UsersRepository {
 class UsersRepositoryImpl : UsersRepository {
 
     override suspend fun getUsers(): List<User> {
-        delay(1000)
+        delay(500)
 
         return (0..50).map {
             User(

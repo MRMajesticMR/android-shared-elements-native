@@ -4,10 +4,11 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.*
+import ru.arkasha.sharedelementsnative.base.tuneVertical
 import ru.arkasha.sharedelementsnative.data.UsersRepository
 import ru.arkasha.sharedelementsnative.data.UsersRepositoryImpl
-import kotlin.coroutines.CoroutineContext
 
 class FirstFragment : Fragment(R.layout.f_first) {
 
@@ -16,26 +17,30 @@ class FirstFragment : Fragment(R.layout.f_first) {
 
     private val usersRepository: UsersRepository = UsersRepositoryImpl()
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        view.findViewById<View>(R.id.bShow).setOnClickListener {
-            showSecondFragment()
+    private val usersRecyclerViewAdapter by lazy {
+        UsersRecyclerViewAdapter().apply {
+            onClicked = { view, user ->
+                showSecondFragment(view)
+            }
         }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        view.findViewById<RecyclerView>(R.id.tvUsers).tuneVertical(usersRecyclerViewAdapter)
 
         ioScope.launch {
             val users = usersRepository.getUsers()
 
             withContext(Dispatchers.Main) {
-
+                usersRecyclerViewAdapter.setData(users)
             }
         }
     }
 
-    private fun showSecondFragment() {
-        val imageView = view?.findViewById<View>(R.id.ivIcon) ?: return
-
+    private fun showSecondFragment(view: View) {
         activity?.supportFragmentManager?.commit {
             setReorderingAllowed(true)
-            addSharedElement(imageView, "large_icon")
+            addSharedElement(view.findViewById(R.id.ivAvatar), "large_icon")
             replace(R.id.vgFragmentsContainer, SecondFragment())
             addToBackStack(null)
         }

@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.commit
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.*
@@ -47,6 +48,12 @@ class FirstFragment : Fragment(R.layout.f_first) {
 
     private fun showSecondFragment(view: View) {
         activity?.supportFragmentManager?.commit {
+            setCustomAnimations(
+                android.R.anim.fade_in,
+                android.R.anim.fade_out,
+                android.R.anim.fade_in,
+                android.R.anim.fade_out
+            )
             setReorderingAllowed(true)
             addSharedElement(view.findViewById(R.id.ivAvatar), "large_icon")
             replace(R.id.vgFragmentsContainer, SecondFragment())

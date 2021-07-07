@@ -2,6 +2,8 @@ package ru.arkasha.sharedelementsnative
 
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
+import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.recyclerview.widget.RecyclerView
@@ -26,6 +28,8 @@ class FirstFragment : Fragment(R.layout.f_first) {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        postponeEnterTransition()
+
         view.findViewById<RecyclerView>(R.id.tvUsers).tuneVertical(usersRecyclerViewAdapter)
 
         ioScope.launch {
@@ -33,6 +37,10 @@ class FirstFragment : Fragment(R.layout.f_first) {
 
             withContext(Dispatchers.Main) {
                 usersRecyclerViewAdapter.setData(users)
+
+                (view as? ViewGroup)?.doOnPreDraw {
+                    startPostponedEnterTransition()
+                }
             }
         }
     }
